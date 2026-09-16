@@ -1,3 +1,4 @@
+// Primitive types in Kotlin
 fun main() {
     val num: Int = 0x0101
     println(num + 3)

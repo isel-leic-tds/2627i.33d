@@ -1,3 +1,4 @@
+// Partial and total evaluation of boolean expressions
 fun main() {
     val x = readln().toBoolean() and readln().toBoolean()
     val y = true.and(false) // true and false

@@ -1,4 +1,5 @@
-val daysOfNovember = 30
+// Global and local declarations
+const val daysOfNovember = 30
 
 fun main() {
     val message = "world"
