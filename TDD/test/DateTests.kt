@@ -1,6 +1,14 @@
 import kotlin.test.*
 
 class DateTests {
+    @Test fun `Get the last day of month`() {
+        val sut = Date(2024,2)
+        assertEquals(29, sut.lastDayOfMonth)
+        val sut2 = Date(2025,2)
+        assertEquals(28, sut2.lastDayOfMonth)
+        val sut3 = Date(2024,4)
+        assertEquals(30, sut3.lastDayOfMonth)
+    }
     @Test fun `Check if has a leap year`() {
         val sut = Date(2024)
         assertTrue(sut.hasLeapYear)
