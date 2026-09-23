@@ -1,1 +1,1 @@
-class Date(val year: Int, val month: Int, val day: Int)
+class Date(val year: Int, val month: Int = 1, val day: Int = 1)
