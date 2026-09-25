@@ -7,6 +7,9 @@ class Date(val year: Int, val month: Int = 1, val day: Int = 1) {
         require(month in 1..daysOfMonths.size) { "Month must be between 1 and 12" }
         require(day in 1..lastDayOfMonth) { "Day must be between 1 and $lastDayOfMonth" }
     }
+    override fun equals(other: Any?): Boolean =
+        other is Date && year == other.year && month == other.month && day == other.day
+    override fun hashCode(): Int = (year shl 9) or (month shl 5) or day
 }
 
 val Int.isLeapYear: Boolean
@@ -35,3 +38,8 @@ tailrec fun Date.addDays(days: Int): Date {
 operator fun Date.plus(days: Int): Date = addDays(days)
 operator fun Int.plus(dt: Date): Date = dt.addDays(this)
 
+operator fun Date.compareTo(other: Date): Int = when {
+    year != other.year -> year - other.year
+    month != other.month -> month - other.month
+    else -> day - other.day
+}

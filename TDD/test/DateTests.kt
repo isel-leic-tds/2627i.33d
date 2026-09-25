@@ -1,6 +1,24 @@
 import kotlin.test.*
 
 class DateTests {
+    @Test fun `Relative compare between Dates`() {
+        // a > b -> a.compareTo(b) > 0
+        val sut1 = Date(2024, 2, 1)
+        val sut2 = Date(2024, 2, 2)
+        assertTrue(sut1 < sut2)
+        assertTrue(sut2 > sut1)
+        val sut3 = Date(2026, 2, 1)
+        assertTrue(sut1 < sut3)
+        assertTrue(sut2 < sut3)
+    }
+    @Test fun `Compare equal Dates`() {
+        // a == b -> a?.equals(b) ?: b==null
+        val sut1 = Date(2024, 2, 1)
+        val sut2 = Date(2024, 2, 1)
+        assertEquals(sut1, sut2)
+        val sut3 = Date(2025, 2, 1)
+        assertNotEquals(sut1, sut3)
+    }
     @Test fun `Add days to a Date`() {
         // a + b -> a.plus(b)
         val sut = Date(2024, 2, 1) + 5
