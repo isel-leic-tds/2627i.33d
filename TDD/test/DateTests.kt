@@ -1,6 +1,21 @@
 import kotlin.test.*
 
 class DateTests {
+    @Test fun `Add days to a Date`() {
+        // a + b -> a.plus(b)
+        val sut = Date(2024, 2, 1) + 5
+        assertEquals(6, sut.day)
+        assertEquals(2024, sut.year)
+        assertEquals(2, sut.month)
+        val sut2 = Date(2024, 2, 1) + 30
+        assertEquals(2, sut2.day)
+        assertEquals(2024, sut2.year)
+        assertEquals(3, sut2.month)
+        val sut3 = 366 + Date(2024, 2, 1)
+        assertEquals(1, sut3.day)
+        assertEquals(2025, sut3.year)
+        assertEquals(2, sut3.month)
+    }
     @Test fun `Make Illegal Dates Unrepresentable`() {
         val ex = assertFailsWith<IllegalArgumentException> { Date(2024, 2, 30) }
         assertEquals("Day must be between 1 and 29", ex.message)

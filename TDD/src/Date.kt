@@ -20,4 +20,18 @@ val Date.lastDayOfMonth get() =
     if (month == 2 && year.isLeapYear) 29
     else daysOfMonths[month - 1]
 
+tailrec fun Date.addDays(days: Int): Date {
+    require(days >= 0) { "Days must be positive" }
+    return when {
+        days + day <= lastDayOfMonth ->
+            Date(year, month, day + days)
+        month < 12 ->
+            Date(year, month + 1).addDays(days - (lastDayOfMonth - day + 1))
+        else ->
+            Date(year + 1).addDays(days - (lastDayOfMonth - day + 1))
+    }
+}
+
+operator fun Date.plus(days: Int): Date = addDays(days)
+operator fun Int.plus(dt: Date): Date = dt.addDays(this)
 
