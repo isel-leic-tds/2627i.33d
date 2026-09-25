@@ -9,7 +9,10 @@ class Date(val year: Int, val month: Int = 1, val day: Int = 1) {
     }
     override fun equals(other: Any?): Boolean =
         other is Date && year == other.year && month == other.month && day == other.day
-    override fun hashCode(): Int = (year shl 9) or (month shl 5) or day
+    override fun hashCode(): Int =
+        (year shl 9) or (month shl 5) or day
+    override fun toString() =
+        "$year-" + "%02d-%02d".format(month, day)
 }
 
 val Int.isLeapYear: Boolean

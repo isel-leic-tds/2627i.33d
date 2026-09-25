@@ -1,6 +1,10 @@
 import kotlin.test.*
 
 class DateTests {
+    @Test fun `Printable dates`() {
+        val sut = Date(2024, 2, 1)
+        assertEquals("2024-02-01",sut.toString())
+    }
     @Test fun `Relative compare between Dates`() {
         // a > b -> a.compareTo(b) > 0
         val sut1 = Date(2024, 2, 1)
