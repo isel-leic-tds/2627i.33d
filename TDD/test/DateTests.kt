@@ -1,6 +1,13 @@
 import kotlin.test.*
 
 class DateTests {
+    @Test fun `Make Illegal Dates Unrepresentable`() {
+        val ex = assertFailsWith<IllegalArgumentException> { Date(2024, 2, 30) }
+        assertEquals("Day must be between 1 and 29", ex.message)
+        assertFailsWith<IllegalArgumentException> { Date(2024, 4, 31) }
+        assertFailsWith<IllegalArgumentException> { Date(2024, 13, 1) }
+        assertFailsWith<IllegalArgumentException> { Date(1400, 1, 1) }
+    }
     @Test fun `Get the last day of month`() {
         val sut = Date(2024,2)
         assertEquals(29, sut.lastDayOfMonth)

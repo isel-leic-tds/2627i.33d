@@ -1,8 +1,10 @@
+private const val GREGORIAN_START = 1582
+private const val MAX_YEAR = 2200
 
 class Date(val year: Int, val month: Int = 1, val day: Int = 1) {
     init {
-        require(year in 1582..2200)
-        require(month in 1..12) { "Month must be between 1 and 12" }
+        require(year in GREGORIAN_START..MAX_YEAR)
+        require(month in 1..daysOfMonths.size) { "Month must be between 1 and 12" }
         require(day in 1..lastDayOfMonth) { "Day must be between 1 and $lastDayOfMonth" }
     }
 }
