@@ -1,18 +1,30 @@
+import kotlin.or
+import kotlin.shl
+
 private const val GREGORIAN_START = 1582
 private const val MAX_YEAR = 2200
 
-class Date(val year: Int, val month: Int = 1, val day: Int = 1) {
+private const val DAY_BITS = 5
+private const val MONTH_BITS = 4
+private const val YEAR_BITS = 12
+
+//@JvmInline to 2.4.10 version
+value class Date private constructor(private val bits: Int) {
+    constructor(year: Int, month: Int = 1, day: Int = 1)
+            :this((year shl (DAY_BITS+MONTH_BITS)) or (month shl DAY_BITS) or day)
     init {
         require(year in GREGORIAN_START..MAX_YEAR)
         require(month in 1..daysOfMonths.size) { "Month must be between 1 and 12" }
         require(day in 1..lastDayOfMonth) { "Day must be between 1 and $lastDayOfMonth" }
     }
-    override fun equals(other: Any?): Boolean =
-        other is Date && year == other.year && month == other.month && day == other.day
-    override fun hashCode(): Int =
-        (year shl 9) or (month shl 5) or day
+
+    val year get() = bits shr (DAY_BITS+MONTH_BITS)
+    val month get() = (bits shr DAY_BITS) and ((1 shl MONTH_BITS) - 1)
+    val day get() = bits and ((1 shl DAY_BITS) - 1)
+
     override fun toString() =
         "$year-" + "%02d-%02d".format(month, day)
+    operator fun compareTo(other: Date): Int = bits - other.bits
 }
 
 val Int.isLeapYear: Boolean
@@ -40,9 +52,3 @@ tailrec fun Date.addDays(days: Int): Date {
 
 operator fun Date.plus(days: Int): Date = addDays(days)
 operator fun Int.plus(dt: Date): Date = dt.addDays(this)
-
-operator fun Date.compareTo(other: Date): Int = when {
-    year != other.year -> year - other.year
-    month != other.month -> month - other.month
-    else -> day - other.day
-}
