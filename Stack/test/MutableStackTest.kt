@@ -1,6 +1,18 @@
 import kotlin.test.*
 
 class MutableStackTest {
+    @Test fun `Verify hashCode consistency with equals`() {
+        val s1 = MutableStack<Int>()
+        val s2 = MutableStack<Int>()
+        assertEquals(s1.hashCode(), s2.hashCode())
+        s1.push(1)
+        assertNotEquals(s1.hashCode(), s2.hashCode())
+        s2.push(1)
+        assertEquals(s1.hashCode(), s2.hashCode())
+        s1.push(2)
+        s2.push(2)
+        assertEquals(s1.hashCode(), s2.hashCode())
+    }
     @Test fun `Equality of stacks with same elements`() {
         val s1 = MutableStack<Int>()
         val s2 = MutableStack<Int>()
