@@ -1,6 +1,18 @@
 import kotlin.test.*
 
-class TestList {
+class MutableStackTest {
+    @Test fun `Equality of stacks with same elements`() {
+        val s1 = MutableStack<Int>()
+        val s2 = MutableStack<Int>()
+        assertEquals(s1, s2)
+        s1.push(1)
+        assertNotEquals(s1, s2)
+        s2.push(1)
+        assertEquals(s1, s2)
+        s1.push(2)
+        s2.push(2)
+        assertEquals(s1, s2)
+    }
     @Test
     fun `Create an empty stack`() {
         val sut = MutableStack<Int>()
