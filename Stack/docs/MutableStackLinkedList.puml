@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+hide empty members
+circle stk
+object "MutableStack<Char>" as ms
+stk -> ms
+
+object "Node<Char>" as n1
+object "Char" as b
+b : value = 'B'
+n1 *-> b : elem
+ms o-> n1 : head
+
+object "Node<Char>" as n2
+object "Char" as a
+a : value = 'A'
+n2 *-> a : elem
+n1 o--> n2 : next
+
+@enduml
