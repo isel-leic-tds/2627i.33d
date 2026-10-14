@@ -16,8 +16,4 @@ fun main() {
     print(empty.isEmpty())
     print(two.pop().top)
     // Output: trueA
-    val res = one.pop2()
-    print(res.first.isEmpty())
-    print(res.second)
-    // Output: trueA
 }
