@@ -36,4 +36,13 @@ class StackTest {
         }
         assertEquals(12, sum)
     }
+    @Test fun `verify equality`(){
+        val s1 = Stack<Char>().push('A').push('B')
+        val s2 = Stack<Char>().push('A').push('B')
+        assertEquals(s1,s2)
+        assertEquals(s1.hashCode(),s2.hashCode())
+        assertEquals(s1,s1)
+        assertNotEquals(s1, s2.pop())
+        assertNotEquals(s1.pop(), s2)
+    }
 }

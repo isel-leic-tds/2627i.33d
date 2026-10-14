@@ -20,8 +20,8 @@ class Stack<T> private constructor(
         doAction(n.next, action)
     }
 
-    private inner class It : Iterator<T> {
-        private var node: Node<T>? = head
+    override fun iterator() = object : Iterator<T> {
+        var node: Node<T>? = head
         override fun hasNext(): Boolean = node != null
         override fun next(): T =
             node?.let {
@@ -30,5 +30,15 @@ class Stack<T> private constructor(
             } ?: throw NoSuchElementException("No more elements")
     }
 
-    override fun iterator(): Iterator<T> = It()
+    override fun equals(other: Any?): Boolean {
+        if (other !is Stack<*>) return false
+        val io = other.iterator()
+        for(e in this)
+            if (!io.hasNext() || e!=io.next())
+                return false
+        return !io.hasNext()
+    }
+
+    override fun hashCode() =
+        fold(0){ res,e -> res*31+e.hashCode() }
 }
