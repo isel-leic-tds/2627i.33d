@@ -45,4 +45,11 @@ class StackTest {
         assertNotEquals(s1, s2.pop())
         assertNotEquals(s1.pop(), s2)
     }
+    @Test fun `Create stacks with elements`() {
+        val sut1 = stackOf('A','B','C')
+        val sut2 = Stack<Char>().push('A').push('B').push('C')
+        assertEquals(sut2,sut1)
+        val sut3 = Stack(3){ 'A'+ it }
+        assertEquals(sut1,sut3)
+    }
 }
