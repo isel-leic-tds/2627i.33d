@@ -4,21 +4,20 @@ import model.*
 
 fun main() {
     var game: Game? = null
+    val cmds: Map<String,Command> = getCommands()
     while (true) {
-        game?.show()
-        print("> ")
-        val cmd = readln().trim().uppercase().split(' ')
-        when(val name = cmd[0]) {
-            "NEW" -> game = game?.new() ?: Game()
-            "EXIT" -> break
-            "PLAY" -> {
-                if (game!=null) {
-                    val pos = cmd[1].toInt()
-                    if ( game.canPlay(pos))
-                        game = game.play(pos)
-                }
-            }
-            else -> println("Invalid command $name")
+        val (name,args) = readCommand()
+        val cmd = cmds[name]
+        if (cmd==null) println("Invalid command $name")
+        else try {
+            game = cmd.execute(args,game)
+            if (cmd.isTerminate) break
+            game?.show()
+        } catch(e: IllegalArgumentException) {
+            println(e.message)
+            println("Use: $name ${cmd.syntaxe}")
+        } catch(e: IllegalStateException) {
+            println(e.message)
         }
     }
 }
