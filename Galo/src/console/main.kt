@@ -15,7 +15,7 @@ fun main() {
             game?.show()
         } catch(e: IllegalArgumentException) {
             println(e.message)
-            println("Use: $name ${cmd.syntaxe}")
+            println("Use: $name ${cmd.syntax}")
         } catch(e: IllegalStateException) {
             println(e.message)
         }
