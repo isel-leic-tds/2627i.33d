@@ -5,31 +5,50 @@ const val BOARD_DIM = BOARD_SIZE*BOARD_SIZE
 
 val EMPTY = null
 
+sealed class GameState
+class Run(val turn: Player): GameState()
+class Win(val winner: Player): GameState()
+object Draw: GameState()
+
+typealias Board = Map<Position, Player>
+fun emptyBoard(): Board = emptyMap()
+
 data class Game(
     val first: Player = Player.X,
-    val turn: Player = first,
-    val board: List<Player?> = List(BOARD_DIM){ EMPTY }
+    val state: GameState = Run(first),
+    val board: Board = emptyBoard()
 )
 
 fun Game.new() = Game(first= first.other)
 
-fun Game.canPlay(p: Position) = board[p.index]==EMPTY
+fun Game.canPlay(p: Position) = board[p]==EMPTY
 
-fun Game.play(pos: Position): Game {
-    check(canPlay(pos)) { "$pos already used"}
-    return Game(
-        first = first,
-        turn = turn.other,
-        board = board.mapIndexed { i, p ->
-            if (i == pos.index) turn else p
-        }
-    )
+fun Game.play(pos: Position): Game = when(state) {
+    is Run -> {
+        check(canPlay(pos)) { "$pos already used" }
+        val board = board + (pos to state.turn)
+        Game(
+            first = first,
+            state = when {
+                board.isWinAt(pos) -> Win(state.turn)
+                board.size == BOARD_DIM -> Draw
+                else -> Run(state.turn.other)
+            },
+            board = board
+        )
+    }
+    is Draw, is Win -> error("Game over")
 }
 
-fun Game.isWinner(p: Player): Boolean {
-    //Position.all.filter{ board[it.index] == p}
-    return (0..8 step 4).all { board[it] == p } ||
-            (2..6 step 2).all { board[it] == p } ||
-            (0..6 step 3).any { r -> (0..2).all { board[r + it] == p } } ||
-            (0..2).any { c -> (0..6 step 3).all { board[c + it] == p } }
+fun Board.isWinAt(pos: Position): Boolean {
+    val player = getValue(pos)
+    val places = filterValues { it==player }.keys
+    if (places.size < BOARD_SIZE) return false
+    val counts = [
+        places.count { it.col == pos.col },
+        places.count { it.row == pos.row },
+        places.count { it.backSlash },
+        places.count { it.slash }
+    ]
+    return counts.any{ it == BOARD_SIZE }
 }

@@ -13,4 +13,5 @@ class Position private constructor(val index: Int) {
             return all[i]
         }
     }
+    override fun toString() = "($index)"
 }
