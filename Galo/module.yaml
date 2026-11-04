@@ -1,9 +1,14 @@
 product: jvm/app
 
 settings:
+  compose: enabled
   kotlin:
     version: 2.4.20
     freeCompilerArgs:
       - -Xcollection-literals
       - -Xreturn-value-checker=full
       - -Xname-based-destructuring=complete
+
+dependencies: 
+  - $compose.material3
+  - $compose.desktop.currentOs
