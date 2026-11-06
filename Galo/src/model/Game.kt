@@ -6,9 +6,9 @@ const val BOARD_DIM = BOARD_SIZE*BOARD_SIZE
 val EMPTY = null
 
 sealed class GameState
-class Run(val turn: Player): GameState()
-class Win(val winner: Player): GameState()
-object Draw: GameState()
+data class Run(val turn: Player): GameState()
+data class Win(val winner: Player): GameState()
+data object Draw: GameState()
 
 typealias Board = Map<Position, Player>
 fun emptyBoard(): Board = emptyMap()
