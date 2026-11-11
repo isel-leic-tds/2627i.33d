@@ -19,6 +19,10 @@ fun Game.show() {
 
 fun Player?.toChar() = when(this) {
     Player.X -> 'X'
-    Player.O -> '0'
+    Player.O -> 'O'
     null -> ' '
+}
+
+fun Score.show() {
+    println( entries.joinToString(" ") { "${it.key?.toChar() ?: "Draws"}=${it.value}" } )
 }
