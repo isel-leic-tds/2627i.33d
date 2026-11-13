@@ -12,3 +12,4 @@ settings:
 dependencies: 
   - $compose.material3
   - $compose.desktop.currentOs
+  - com.squareup.okio:okio:3.18.2

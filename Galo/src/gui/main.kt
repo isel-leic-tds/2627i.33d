@@ -18,26 +18,20 @@ fun main() = application {
 
 @Composable
 fun FrameWindowScope.App(onExit: () -> Unit) {
-    var game by remember { mutableStateOf(Game()) }
-    var showScore by remember { mutableStateOf(false) }
+    val vm = remember { ViewModel() }
     MenuBar {
         Menu("Game") {
-            Item("New", enabled = !showScore, onClick = { game = game.new() })
-            Item("Score", onClick = { showScore = true })
+            Item("New", onClick = vm::new)
+            Item("Score", onClick = vm::showScore)
             Item("Exit", onClick = onExit)
         }
     }
     MaterialTheme {
         Column {
-            Board(game.board, onClick = { p:Position ->
-                if (game.state is Run) {
-                    game = game.play(p)
-                    if (game.state !is Run) showScore = true
-                }
-            })
-            StatusBar(game.state)
+            Board(vm.game.board, onClick = vm::play)
+            StatusBar(vm.game.state)
         }
-        if (showScore)
-            ScoreInfo(score = game.score, onClose = { showScore = false })
+        if (vm.showScore)
+            ScoreInfo(score = vm.game.score, onClose = vm::hideScore)
     }
 }
