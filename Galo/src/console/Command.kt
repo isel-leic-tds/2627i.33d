@@ -1,15 +1,15 @@
 package console
 
 import model.*
+import storage.Storage
 
-// FP Style
 data class Command(
     val syntax: String = "",
     val isTerminate: Boolean = false,
     val execute: (List<String>, Game?) -> Game? = { _, g -> g }
 )
 
-fun getCommands(): Map<String, Command> = mapOf(
+fun getCommands(gs: Storage<String,Game>): Map<String, Command> = mapOf(
     "EXIT" to Command(isTerminate = true),
     "NEW" to Command { _, game -> game?.new() ?: Game() },
     "PLAY" to Command("<position>") { args, game ->
@@ -17,35 +17,14 @@ fun getCommands(): Map<String, Command> = mapOf(
         val index = requireNotNull(pos.toIntOrNull()){ "Invalid position $pos"}
         checkNotNull(game){ "Game not started" }.play(Position(index))
     },
-    "SCORE" to Command( execute = { _, game -> game?.also{ it.score.show() }})
-)
-
-/* POO Style
-open class Command(
-    val syntax: String = "",
-    val isTerminate: Boolean = false
-) {
-    open fun execute(args: List<String>, game: Game?): Game? = game
-}
-
-object Play : Command(syntax = "<position>") {
-    override fun execute(args: List<String>, game: Game?): Game? {
-        val pos = requireNotNull(args.firstOrNull()){ "Missing position" }
-        val index = requireNotNull(pos.toIntOrNull()){ "Invalid position $pos"}
-        return checkNotNull(game){ "Game not started" }.play(Position(index))
-    }
-}
-
-fun getCommands(): Map<String, Command> = mapOf(
-    "EXIT" to Command(isTerminate = true),
-    "NEW" to object: Command(){
-        override fun execute(args: List<String>, game: Game?): Game =
-            game?.new() ?: Game()
+    "SCORE" to Command( execute = { _, game -> game?.also{ it.score.show() }}),
+    "SAVE" to storageCommand { file, game ->
+        game.also{gs.create(file,checkNotNull(it){ "Game not started" })}
     },
-    "PLAY" to Play,
-    "SCORE" to object: Command() {
-        override fun execute(args: List<String>, game: Game?): Game? =
-            game?.also{ it.score.show() }
-    }
+    "LOAD" to storageCommand { file, _ -> gs.read(file) }
 )
-*/
+
+fun storageCommand(action: (String,Game?) -> Game?) = Command("<name>") { args, g ->
+    val file = requireNotNull(args.firstOrNull()){ "Missing file name" }
+    action(file,g)
+}
