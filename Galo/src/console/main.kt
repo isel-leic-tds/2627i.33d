@@ -1,24 +1,27 @@
 package console
 
 import model.*
-import storage.TextFileStorage
+//import storage.TextFileStorage
+import storage.mongo.*
 
-fun main() {
+
+fun main() = MongoDriver("galo").use {
     var game: Game? = null
-    val storage = TextFileStorage<String,Game>("games", GameSerializer)
-    val cmds: Map<String,Command> = getCommands(storage)
+    //val storage: GameStorage = TextFileStorage("games", GameSerializer)
+    val storage: GameStorage = MongoStorage("games", it, GameSerializer)
+    val cmds: Map<String, Command> = getCommands(storage)
     while (true) {
-        val (name,args) = readCommand()
+        val (name, args) = readCommand()
         val cmd = cmds[name]
-        if (cmd==null) println("Invalid command $name")
+        if (cmd == null) println("Invalid command $name")
         else try {
-            game = cmd.execute(args,game)
+            game = cmd.execute(args, game)
             if (cmd.isTerminate) break
             game?.show()
-        } catch(e: IllegalArgumentException) {
+        } catch (e: IllegalArgumentException) {
             println(e.message)
             println("Use: $name ${cmd.syntax}")
-        } catch(e: IllegalStateException) {
+        } catch (e: IllegalStateException) {
             println(e.message)
         }
     }

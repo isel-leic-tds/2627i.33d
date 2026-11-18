@@ -1,7 +1,6 @@
 package console
 
 import model.*
-import storage.Storage
 
 data class Command(
     val syntax: String = "",
@@ -9,7 +8,7 @@ data class Command(
     val execute: (List<String>, Game?) -> Game? = { _, g -> g }
 )
 
-fun getCommands(gs: Storage<String,Game>): Map<String, Command> = mapOf(
+fun getCommands(gs: GameStorage): Map<String, Command> = mapOf(
     "EXIT" to Command(isTerminate = true),
     "NEW" to Command { _, game -> game?.new() ?: Game() },
     "PLAY" to Command("<position>") { args, game ->
@@ -24,7 +23,7 @@ fun getCommands(gs: Storage<String,Game>): Map<String, Command> = mapOf(
     "LOAD" to storageCommand { file, _ -> gs.read(file) }
 )
 
-fun storageCommand(action: (String,Game?) -> Game?) = Command("<name>") { args, g ->
+fun storageCommand(action: (Name, Game?) -> Game?) = Command("<name>") { args, g ->
     val file = requireNotNull(args.firstOrNull()){ "Missing file name" }
-    action(file,g)
+    action(Name(file),g)
 }
