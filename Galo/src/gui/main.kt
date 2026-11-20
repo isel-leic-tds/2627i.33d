@@ -18,10 +18,13 @@ fun main() = application {
 
 @Composable
 fun FrameWindowScope.App(onExit: () -> Unit) {
-    val vm = remember { ViewModel() }
+    val vm = remember { TextFileViewModel() /* MongoViewModel()*/ }
     MenuBar {
         Menu("Game") {
-            Item("New", onClick = vm::new)
+            Item("Start game", onClick = vm::start)
+            Item("Join game", onClick = )
+            Item("Refresh", onClick = )
+            Item("New board", onClick = vm::new)
             Item("Score", onClick = vm::showScore)
             Item("Exit", onClick = onExit)
         }
@@ -33,5 +36,6 @@ fun FrameWindowScope.App(onExit: () -> Unit) {
         }
         if (vm.showScore)
             ScoreInfo(score = vm.game.score, onClose = vm::hideScore)
+        vm.editName?.let{ EditNameDialog(it, onCancel = vm::cancelEdit, onAction = vm::action) }
     }
 }
